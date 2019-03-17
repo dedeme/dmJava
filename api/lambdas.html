@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Java - Lambdas</title>
+  <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+  <meta http-equiv="Cache-Control" content=
+  "no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta name='lang' content='es' />
+  <meta name='author' content='ºDeme.' />
+  <link rel='icon' type='image/png' href='http://localhost/img/favicon.png' />
+  <link rel='stylesheet' href='http://localhost/notes.css' type='text/css' />
+</head>
+<body>
+  <p align="center" class="title">Java - Lambdas</p>
+  <hr />
+  <h2>Example</h2>
+  <pre>
+    roster
+    .stream()
+    .filter(
+        p -> p.getGender() == Person.Sex.MALE
+            && p.getAge() >= 18
+            && p.getAge() <= 25)
+    .map(p -> p.getEmailAddress())
+    .forEach(email -> System.out.println(email));
+  </pre>
+
+  <h2>stream()</h2>
+  <ul>
+    <li>static Arrays.stream</li>
+    <li>Collection.stream</li>
+    <li>ZipFile.stream</li>
+    <li>JarFile.stream</li>
+    <li>BitSet.stream</li>
+  </ul>
+
+  <h2>Stream.Builder</h2>
+  <p>It is getting from <tt>static Stream.builder()</tt>.</p>
+  <p>Its use is in three steps:</p>
+  <ol>
+    <li>Creation: <tt>Stream.Builder<String> st = Stream.builder()</tt>.</li>
+    <li>Population: <tt>st.add("abc")</tt></li>
+    <li>Building: <tt>st.build()</tt></li>
+  </ol>
+  <p>After building invocation, new elements can not be added.</p>
+
+  <h2>Shorthand <tt>::</tt></h2>
+  <p>When a method of a closure is already defined, it is posible to use
+     <tt>::</tt></p>
+  <p>Examples:</p>
+  <table><tr><td><pre>
+    ====== <b>Static method</b>
+    String[] a = {"a", "b"};
+    Arrays.stream(a).forEach(System.out::println);
+    --- Out
+    a
+    b
+    ======= <b>Instance method on concrent object</b>
+    String[] a = {"a", "b"};
+    StringBuilder sb = new StringBuilder();
+    Arrays.stream(a).forEach(sb::append);
+    System.out.println(sb);
+    --- Out
+    ab
+    ====== <b>Instance method on unkown object</b>
+    StringBuilder sb1 =  new StringBuilder("a");
+    StringBuilder sb2 =  new StringBuilder("b");
+    ArrayList&lt;StringBuilder> ls = new ArrayList<>();
+    ls.add(sb1);
+    ls.add(sb2);
+    for (
+      String s :
+      ls.stream().map(StringBuilder::toString)
+                 .collect(Collectors.toList())
+    )
+    System.out.println(s);
+    --- Out
+    a
+    b
+    ======= <b>Constructor method</b>
+    String[] a = {"a", "b"};
+    List&lt;StringBuilder> ls = Arrays.stream(a)
+      .map(StringBuilder::new)
+      .collect(Collectors.toList());
+    ls.forEach(System.out::println);
+    --- Out
+    a
+    b</pre>
+  </td></tr></table>
+
+  <h2>Methods</h2>
+  <p><b><tt>empty</tt></b></p>
+  <table><tr><td><pre>
+    System.out.println(Stream.empty().count());
+    --- Out
+    0</pre>
+  </td></tr></table>
+  <p><b><tt>toArray</tt></b></p>
+  <table><tr><td><pre>
+    Integer[] ns = Stream.of(1, 3).toArray(Integer[]::new);
+    for (int n : ns)
+      System.out.println(n);
+    --- Out
+    1
+    3</pre>
+  </td></tr></table>
+  <p><b><tt>collect</tt></b></p>
+  <table><tr><td><pre>
+    Stream.Builder&lt;String> bd = Stream.builder();
+    bd.add("a");
+    <b>List</b>&lt;String> ls = bd.build().collect(Collectors.toList());
+    ls.forEach(System.out::println);
+    --- Out
+    a</pre>
+  </td></tr></table>
+  <p><b><tt>forEach</tt> (available for ArrayList)</b></p>
+  <table><tr><td><pre>
+    String[] a = {"a", "b"};
+    Arrays.stream(a).forEach(s -> System.out.println(s));
+    --- Out
+    a
+    b</pre>
+  </td></tr></table>
+  <p><b><tt>filter</tt></b></p>
+  <table><tr><td><pre>
+    String[] a = {"a", "b"};
+    Arrays.stream(a)
+      .filter(s -> s.equals("a"))
+      .forEach(System.out::println);
+    --- Out
+    a</pre>
+  </td></tr></table>
+  <p><b><tt>distinct</tt></b></p>
+  <table><tr><td><pre>
+    Stream.of(1, 3, 1, 1, 3)
+      .distinct()
+      .forEach(System.out::println);
+    --- Out
+    1
+    3</pre>
+  </td></tr></table>
+  <p><b><tt>map</tt></b></p>
+  <table><tr><td><pre>
+    String[] a = {"a", "b"};
+    Arrays.stream(a)
+      .map(String::toUpperCase)
+      .forEach(System.out::println);
+    --- Out
+    A
+    B</pre>
+  </td></tr></table>
+  <p><b><tt>reduce</tt> [1] ('seed' and 'e' are of the same type)</b></p>
+  <table><tr><td><pre>
+    System.out.println(
+      Stream.of("a", "b")
+        .reduce("", (seed, e) -> seed + e)
+    --- Out
+    ab</pre>
+  </td></tr></table>
+  </td></tr></table>
+  <p><b><tt>reduce</tt> [2] ('seed' and 'e' are of distinct type)</b></p>
+  <p><i>Note:</i> <tt>(e, f) -> e</tt> is useless but necessary.</p>
+  <table><tr><td><pre>
+    String s = "abcde";
+    System.out.println(
+      Stream.of(2, 3)
+        .reduce("", (seed, e) -> seed + s.charAt(e), (e, f) -> e)
+    );
+    --- Out
+    cd</pre>
+  </td></tr></table>
+  <p><b><tt>allMatch</tt></b></p>
+  <table><tr><td><pre>
+    System.out.println(
+      Stream.of(2, 4)
+        .allMatch(e -> e % 2 == 0)
+    );
+    --- Out
+    true</pre>
+  </td></tr></table>
+  <p><b><tt>anyMatch</tt></b></p>
+  <table><tr><td><pre>
+    System.out.println(
+      Stream.of(2, 4, 7)
+        .anyMatch(e -> e % 2 == 0)
+    );
+    --- Out
+    true</pre>
+  </td></tr></table>
+  <p><b><tt>findFirst</tt></b></p>
+  <table><tr><td><pre>
+    System.out.println(
+      Stream.of(1, 2, 4, 7)
+        .filter(e -> e % 2 == 0)
+        .findFirst()
+    );
+    --- Out
+    Optional[2]</pre>
+  </td></tr></table>
+  <p><b><tt>limit</tt></b></p>
+  <table><tr><td><pre>
+    Stream.of(1, 2, 4, 7)
+      .limit(2)
+      .forEach(System.out::println);
+    --- Out
+    1
+    2</pre>
+  </td></tr></table>
+  <p><b><tt>skip</tt></b></p>
+  <table><tr><td><pre>
+    Stream.of(1, 2, 4, 7)
+      .skip(2)
+      .forEach(System.out::println);
+    --- Out
+    4
+    7</pre>
+  </td></tr></table>
+  <p><b><tt>sorted</tt> [1]</b></p>
+  <table><tr><td><pre>
+    Stream.of(6, 2, 1, 7)
+      .sorted() // Ascendent order
+      .forEach(System.out::println);
+    --- Out
+    1
+    2
+    6
+    7</pre>
+  </td></tr></table>
+  <p><b><tt>sorted</tt> [2]</b></p>
+  <table><tr><td><pre>
+    Stream.of(6, 1, 7, 2)
+      .sorted((e1, e2) -> e1 % 2 - e2 % 2) // Ascendent order
+      .forEach(System.out::println);
+    --- Out
+    6
+    2
+    1
+    7</pre>
+  </td></tr></table>
+
+</body>
+</html>
