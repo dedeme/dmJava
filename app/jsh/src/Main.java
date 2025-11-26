@@ -118,7 +118,7 @@ public class Main {
         }
       }
     } catch (Exception e) {
-      log(Std.stackTace(e));
+      log(Std.stackTrace(e));
       return;
     }
 

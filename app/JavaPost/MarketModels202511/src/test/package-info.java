@@ -1,0 +1,2 @@
+/** Tests package. */
+package test;

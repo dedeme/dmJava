@@ -1,0 +1,58 @@
+#!/bin/bash
+
+PRG=barbery
+LIB=/dm/dmJava/lib/lkut.jar
+
+# -----------------------------------------------------------------------------
+
+pack () {
+  rm -fR classes
+  mkdir classes
+  javac -cp $LIB -d classes src/*.java src/*/*.java
+  if [ -e pack/tmp ]
+  then
+    rm -fR pack/tmp
+  fi
+  if [ ! -e pack ]
+  then
+    mkdir pack
+  fi
+  mkdir pack/tmp
+  cd pack/tmp
+  jar xvf $LIB
+  cp -fR ../../classes/* ./
+  rm -fR META-INF
+  mkdir META-INF
+  echo 'Manifest-Version: 1.0' > META-INF/MANIFEST.MF
+  echo 'Created-By: ºDeme' >> META-INF/MANIFEST.MF
+  echo 'Main-Class: Main' >> META-INF/MANIFEST.MF
+  echo ''>> META-INF/MANIFEST.MF
+  jar cvfm ../$PRG.jar META-INF/MANIFEST.MF *
+  cd ../..
+  rm -fR pack/tmp
+}
+
+case $1 in
+c*)
+  javac -cp $LIB -d classes src/*.java src/*/*.java
+  ;;
+x*)
+  javac -cp $LIB -d classes src/*.java src/*/*.java
+  java -cp $LIB:classes Main
+  ;;
+pack*)
+  pack
+  ;;
+run*)
+  pack
+  java -jar pack/$PRG.jar
+  ;;
+doc*)
+  javadoc -quiet -d api src/*.java src/*/*.java -linksource
+  ;;
+*)
+  echo $1: Unknown option
+  ;;
+esac
+
+

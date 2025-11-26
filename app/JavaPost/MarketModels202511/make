@@ -1,0 +1,73 @@
+#!/bin/bash
+
+PRG=MarketModels202511
+LIB=/dm/dmJava/lib/lkut.jar
+LIB2=/dm/dmJava/lib/lmkt.jar
+LIB_SOURCE='/dm/dmJava/lib/lkut/src/*/*.java /dm/dmJava/lib/lmkt/src/*/*.java'
+
+# -----------------------------------------------------------------------------
+
+pack () {
+  rm -fR classes
+  mkdir classes
+  javac -cp $LIB:$LIB2 -d classes src/*.java src/*/*.java
+  if [ -e bin/tmp ]
+  then
+    rm -fR bin/tmp
+  fi
+  if [ ! -e bin ]
+  then
+    mkdir bin
+  fi
+  mkdir bin/tmp
+  cd bin/tmp
+  jar xvf $LIB
+  jar xvf $LIB2
+  cp -fR ../../classes/* ./
+  rm -fR META-INF
+  mkdir META-INF
+  echo 'Manifest-Version: 1.0' > META-INF/MANIFEST.MF
+  echo 'Created-By: ºDeme' >> META-INF/MANIFEST.MF
+  echo 'Main-Class: Main' >> META-INF/MANIFEST.MF
+  echo ''>> META-INF/MANIFEST.MF
+  jar cvfm ../$PRG.jar META-INF/MANIFEST.MF *
+  cd ../..
+  rm -fR bin/tmp
+}
+
+case $1 in
+c*)
+  javac -cp $LIB:$LIB2 -d classes src/*.java src/*/*.java
+  ;;
+x*)
+  javac -cp $LIB:$LIB2 -d classes src/*.java src/*/*.java
+  java -cp $LIB:$LIB2:classes Main
+  ;;
+pack*)
+  pack
+  echo '#!/bin/bash' > bin/$PRG
+  echo 'java -jar '`pwd`'/bin/'$PRG'.jar $*' >> bin/$PRG
+  echo '#'`pwd`'/bin/'$PRG'.bin $*' >> bin/$PRG
+  chmod +x bin/$PRG
+  ;;
+bin*)
+  pack
+  jcmp bin/$PRG -o bin/$PRG.bin
+  echo '#!/bin/bash' > bin/$PRG
+  echo '#java -jar '`pwd`'/bin/'$PRG'.jar $*' >> bin/$PRG
+  echo `pwd`'/bin/'$PRG'.bin $*' >> bin/$PRG
+  chmod +x bin/$PRG
+  ;;
+run*)
+  pack
+  java -jar bin/$PRG.jar
+  ;;
+doc*)
+  javadoc -quiet -d api src/*.java src/*/*.java $LIB_SOURCE -linksource
+  ;;
+*)
+  echo $1: Unknown option
+  ;;
+esac
+
+

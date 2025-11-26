@@ -1,0 +1,3 @@
+#!/bin/bash
+#java -jar /home/deme/dm/dmJava/app/JavaPost/MarketModels202511/bin/MarketModels202511.jar $*
+/home/deme/dm/dmJava/app/JavaPost/MarketModels202511/bin/MarketModels202511.bin $*

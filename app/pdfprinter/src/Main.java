@@ -180,10 +180,10 @@ public class Main {
         String[] ss = args[i].split("-");
         try {
           h2p.setMargins(
-            new Integer(ss[0]),
-            new Integer(ss[1]),
-            new Integer(ss[2]),
-            new Integer(ss[3])
+            Integer.valueOf(ss[0]),
+            Integer.valueOf(ss[1]),
+            Integer.valueOf(ss[2]),
+            Integer.valueOf(ss[3])
           );
         } catch (Exception e) {
           System.out.println("Error in margins");
@@ -194,7 +194,7 @@ public class Main {
         ++i;
         String[] ss = args[i].split("-");
         try {
-          h2p.setPageSize(new Float(ss[0]),new Float(ss[1])          );
+          h2p.setPageSize(Float.valueOf(ss[0]), Float.valueOf(ss[1]));
         } catch (Exception e) {
           System.out.println("Error in pagesize");
           help2();
@@ -204,7 +204,7 @@ public class Main {
         ++i;
         s = args[i];
         try {
-          h2p.setStartPageNumber(            new Integer(s));
+          h2p.setStartPageNumber(Integer.valueOf(s));
         } catch (NumberFormatException e) {
           System.out.println("Error in starts");
           help2();
@@ -220,7 +220,7 @@ public class Main {
         ++i;
         s = args[i];
         try {
-          h2p.getHeader().yCorrect = new Float(s);
+          h2p.getHeader().yCorrect = Float.valueOf(s);
         } catch (Exception e) {
           System.out.println("Error in --h-y");
           help2();
@@ -247,7 +247,7 @@ public class Main {
         ++i;
         s = args[i];
         try {
-          h2p.getHeader().fontSize = new Float(s);
+          h2p.getHeader().fontSize = Float.valueOf(s);
         } catch (Exception e) {
           System.out.println("Error in --h-fsz");
           help2();
@@ -274,7 +274,7 @@ public class Main {
         ++i;
         s = args[i];
         try {
-          h2p.getHeader().lineXCorrect = new Float(s);
+          h2p.getHeader().lineXCorrect = Float.valueOf(s);
         } catch (Exception e) {
           System.out.println("Error in --h-lx");
           help2();
@@ -284,7 +284,7 @@ public class Main {
         ++i;
         s = args[i];
         try {
-          h2p.getHeader().lineYCorrect = new Float(s);
+          h2p.getHeader().lineYCorrect = Float.valueOf(s);
         } catch (Exception e) {
           System.out.println("Error in --h-ly");
           help2();
@@ -300,7 +300,7 @@ public class Main {
         ++i;
         s = args[i];
         try {
-          h2p.getFooter().yCorrect = new Float(s);
+          h2p.getFooter().yCorrect = Float.valueOf(s);
         } catch (Exception e) {
           System.out.println("Error in --f-y");
           help2();
@@ -327,7 +327,7 @@ public class Main {
         ++i;
         s = args[i];
         try {
-          h2p.getFooter().fontSize = new Float(s);
+          h2p.getFooter().fontSize = Float.valueOf(s);
         } catch (Exception e) {
           System.out.println("Error in --f-fsz");
           help2();
@@ -354,7 +354,7 @@ public class Main {
         ++i;
         s = args[i];
         try {
-          h2p.getFooter().lineXCorrect = new Float(s);
+          h2p.getFooter().lineXCorrect = Float.valueOf(s);
         } catch (Exception e) {
           System.out.println("Error in --f-lx");
           help2();
@@ -364,7 +364,7 @@ public class Main {
         ++i;
         s = args[i];
         try {
-          h2p.getFooter().lineYCorrect = new Float(s);
+          h2p.getFooter().lineYCorrect = Float.valueOf(s);
         } catch (Exception e) {
           System.out.println("Error in --f-ly");
           help2();
